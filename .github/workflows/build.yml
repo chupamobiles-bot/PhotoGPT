@@ -1,0 +1,96 @@
+name: 🚀 Build & Deploy
+
+on:
+  push:
+    branches: [main]
+    tags: ['v*']
+  pull_request:
+    branches: [main]
+
+permissions:
+  contents: write
+  pages: write
+  id-token: write
+
+jobs:
+  # ── Web Demo → GitHub Pages ────────────────────────────────────────────────
+  build-web:
+    name: 🌐 Build Web & Deploy to GitHub Pages
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.24.0'
+          channel: 'stable'
+          cache: true
+
+      - name: Install dependencies
+        run: flutter pub get
+
+      - name: Build Web
+        run: flutter build web --release --base-href /PhotoGPT/
+
+      - name: Deploy to GitHub Pages
+        if: github.ref == 'refs/heads/main'
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: build/web
+          cname: ''
+
+  # ── Android APK → GitHub Release ──────────────────────────────────────────
+  build-apk:
+    name: 📱 Build APK & Create Release
+    runs-on: ubuntu-latest
+    if: startsWith(github.ref, 'refs/tags/v')
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'zulu'
+          java-version: '17'
+
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.24.0'
+          channel: 'stable'
+          cache: true
+
+      - name: Install dependencies
+        run: flutter pub get
+
+      - name: Build APK (split per ABI)
+        run: flutter build apk --release --split-per-abi
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          name: "PhotoGPT ${{ github.ref_name }}"
+          body: |
+            ## 📱 Download PhotoGPT ${{ github.ref_name }}
+
+            | Architecture | Download | Size |
+            |---|---|---|
+            | arm64 (most phones) | `app-arm64-v8a-release.apk` | ~18MB |
+            | arm32 (older phones) | `app-armeabi-v7a-release.apk` | ~16MB |
+            | x86_64 (emulator) | `app-x86_64-release.apk` | ~19MB |
+
+            ### 📲 How to install
+            1. Download the APK for your device (arm64 for most modern phones)
+            2. Open the APK on your Android phone
+            3. Tap **Install** (allow "Unknown sources" if prompted)
+            4. Open PhotoGPT → Settings → Add your free [Groq API key](https://console.groq.com)
+
+            ### 🌐 Or try the [Live Web Demo](https://chupamobiles-bot.github.io/PhotoGPT) — no install needed!
+          files: |
+            build/app/outputs/flutter-apk/app-arm64-v8a-release.apk
+            build/app/outputs/flutter-apk/app-armeabi-v7a-release.apk
+            build/app/outputs/flutter-apk/app-x86_64-release.apk
+          draft: false
+          prerelease: false
