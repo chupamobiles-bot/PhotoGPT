@@ -36,22 +36,6 @@ Snap a photo of **literally anything** and ask in plain English:
 
 ---
 
-## 🚀 Try It Right Now
-
-**Option 1 — Web (no install):**
-👉 **[chupamobiles-bot.github.io/PhotoGPT](https://chupamobiles-bot.github.io/PhotoGPT)** — works on any phone browser, camera included
-
-**Option 2 — Android APK:**
-👉 **[Download latest APK](https://github.com/chupamobiles-bot/PhotoGPT/releases/latest)** — 18MB, sideload in 30 seconds
-
-**Option 3 — Build yourself:**
-```bash
-git clone https://github.com/chupamobiles-bot/PhotoGPT
-cd PhotoGPT && flutter pub get && flutter run
-```
-
----
-
 ## 📱 Screenshots
 
 <div align="center">
@@ -70,6 +54,22 @@ cd PhotoGPT && flutter pub get && flutter run
 </tr>
 </table>
 </div>
+
+---
+
+## 🚀 Try It Right Now
+
+**Option 1 — Web (no install):**
+👉 **[chupamobiles-bot.github.io/PhotoGPT](https://chupamobiles-bot.github.io/PhotoGPT)** — works on any phone browser, camera included
+
+**Option 2 — Android APK:**
+👉 **[Download latest APK](https://github.com/chupamobiles-bot/PhotoGPT/releases/latest)** — 18MB, sideload in 30 seconds
+
+**Option 3 — Build yourself:**
+```bash
+git clone https://github.com/chupamobiles-bot/PhotoGPT
+cd PhotoGPT && flutter pub get && flutter run
+```
 
 ---
 
